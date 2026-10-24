@@ -1,3 +1,4 @@
+
 name: Build VISNEX Vega Android APK
 
 on:
@@ -13,6 +14,7 @@ jobs:
   build:
     name: Build Android APK
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -20,8 +22,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: "20"
-          cache: npm
+          node-version: "22"
 
       - name: Setup Java
         uses: actions/setup-java@v4
@@ -42,17 +43,19 @@ jobs:
         run: |
           cd android
           chmod +x gradlew
-          ./gradlew assembleDebug
+          ./gradlew assembleDebug --stacktrace
 
-              - name: Find APK
-          if: always()
-          run: find . -type f -name "*.apk" -print
+      - name: Find APK
+        if: always()
+        run: find . -type f -name "*.apk" -print
 
-        - name: Upload APK
-          uses: actions/upload-artifact@v4
-          with:
-            name: visnex-vega-debug-apk
-            path: |
-              android/**/*.apk
-              **/build/outputs/apk/**/*.apk
-            if-no-files-found: warn
+      - name: Upload APK
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: visnex-vega-debug-apk
+          path: |
+            android/**/*.apk
+            **/build/outputs/apk/**/*.apk
+          if-no-files-found: error
+          
