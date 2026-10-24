@@ -1,6 +1,9 @@
 name: Build VISNEX Vega Android APK
 
 on:
+  push:
+    branches:
+      - main
   workflow_dispatch:
 
 permissions:
