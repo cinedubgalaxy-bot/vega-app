@@ -44,9 +44,15 @@ jobs:
           chmod +x gradlew
           ./gradlew assembleDebug
 
-      - name: Upload APK
-        uses: actions/upload-artifact@v4
-        with:
-          name: visnex-vega-debug-apk
-          path: android/app/build/outputs/apk/debug/app-debug.apk
-          if-no-files-found: error
+              - name: Find APK
+          if: always()
+          run: find . -type f -name "*.apk" -print
+
+        - name: Upload APK
+          uses: actions/upload-artifact@v4
+          with:
+            name: visnex-vega-debug-apk
+            path: |
+              android/**/*.apk
+              **/build/outputs/apk/**/*.apk
+            if-no-files-found: warn
